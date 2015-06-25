@@ -1,68 +1,40 @@
 package com.octopusbeach.wearforgit;
 
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import com.octopusbeach.wearforgit.Helpers.AuthHelper;
 
-//https://stackoverflow.com/questions/22062145/oauth-2-0-authorization-for-linkedin-in-android
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
+
 public class MainActivity extends ActionBarActivity {
+    @InjectView(R.id.login_button)
+    Button loginButton;
 
-    private WebView webView;
-    private ProgressDialog progress;
-
+    private boolean loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        webView = (WebView) findViewById(R.id.webview);
-        webView.requestFocus(View.FOCUS_DOWN);
-        progress = ProgressDialog.show(this, "", getString(R.string.loading), true);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                if (progress != null)
-                    progress.dismiss();
-            }
+        ButterKnife.inject(this);
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith(AuthHelper.REDIRECT)) {
-                    Uri uri = Uri.parse(url);
-                    String stateToken = uri.getQueryParameter(AuthHelper.STATE_PARAM);
-                    if (stateToken == null || !stateToken.equals(AuthHelper.STATE)) {
-                        Log.i("auth", "State token does not match");
-                        return true;
-                    }
-
-                    String authToken = uri.getQueryParameter("code");
-                    if (authToken == null) {
-                        Log.i("auth", "token was null");
-                        return true;
-                    }
-                    new PostRequestTask().execute(AuthHelper.getAccessTokenUrl(authToken));
-                    return true;
-                } else {
-                    webView.loadUrl(url);
-                    return true;
-                }
-            }
-        });
-        webView.loadUrl(AuthHelper.getAuthorizationUrl());
+        SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
+        // Check to see if we are logged in.
+        if (prefs.getString(AuthHelper.TOKEN_KEY, null) != null) { // We are logged in.
+            loginButton.setText(R.string.logout);
+            loggedIn = true;
+        } else
+            loggedIn = false;
     }
 
     @Override
@@ -74,41 +46,31 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings)
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
             return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
-
-    private class PostRequestTask extends AsyncTask<String, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(String... urls) {
-            if (urls.length > 0) {
-                String s = urls[0];
-                try {
-                    URL url = new URL(s);
-                    URLConnection connection = url.openConnection();
-                    String response = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
-                    String accessToken = response.split("=")[1].split("&")[0];
-                    // Save access token.
-                    SharedPreferences preferences = MainActivity.this.getSharedPreferences("token", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("accessToken", accessToken);
-                    editor.apply();
-                    return true;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean status) {
-            if (status)
-                Log.d("Auth", "Finished Successful");
+    @OnClick(R.id.login_button)
+    void login() {
+        if (!loggedIn) // We are not logged in.
+            startActivity(new Intent(this, AuthActivity.class));
+        else {
+            SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(AuthHelper.TOKEN_KEY, null);
+            editor.apply();
+            loginButton.setText(R.string.login);
+            loggedIn = false;
         }
     }
+
 }

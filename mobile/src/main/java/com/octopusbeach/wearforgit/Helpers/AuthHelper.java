@@ -1,4 +1,4 @@
-package com.octopusbeach.wearforgit;
+package com.octopusbeach.wearforgit.Helpers;
 
 /**
  * Created by hudson on 6/23/15.
@@ -18,6 +18,8 @@ public class AuthHelper {
     private static final String EQUALS = "=";
 
     public static final String STATE_PARAM = "state";
+
+    public static final String TOKEN_KEY = "accessToken";
 
     // https://stackoverflow.com/questions/22062145/oauth-2-0-authorization-for-linkedin-in-android
     public static String getAuthorizationUrl() {
