@@ -1,4 +1,4 @@
-package com.octopusbeach.wearforgit;
+package com.octopusbeach.wearforgit.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+import com.octopusbeach.wearforgit.R;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
 
     private boolean loggedIn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
         if (prefs.getString(AuthHelper.TOKEN_KEY, null) != null) { // We are logged in.
             loginButton.setText(R.string.logout);
             loggedIn = true;
+
         } else {
             loggedIn = false;
         }

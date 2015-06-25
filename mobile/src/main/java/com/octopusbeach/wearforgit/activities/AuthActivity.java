@@ -1,4 +1,4 @@
-package com.octopusbeach.wearforgit;
+package com.octopusbeach.wearforgit.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+import com.octopusbeach.wearforgit.R;
 
 import org.json.JSONObject;
 
