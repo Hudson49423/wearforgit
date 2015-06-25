@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -20,6 +21,9 @@ public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.login_button)
     Button loginButton;
 
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+
     private boolean loggedIn;
 
     @Override
@@ -28,19 +32,29 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        setSupportActionBar(toolbar);
+
         SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
         // Check to see if we are logged in.
         if (prefs.getString(AuthHelper.TOKEN_KEY, null) != null) { // We are logged in.
             loginButton.setText(R.string.logout);
             loggedIn = true;
-        } else
+        } else {
             loggedIn = false;
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (loggedIn) {
+            String name = PreferenceManager.getDefaultSharedPreferences(this).getString(AuthHelper.USER_NAME_KEY, null);
+            if (name != null)
+                toolbar.setTitle("Logged In As " + name);
+        } else
+            toolbar.setTitle("Not Currently Logged In");
+
         return true;
     }
 
@@ -70,6 +84,7 @@ public class MainActivity extends ActionBarActivity {
             editor.apply();
             loginButton.setText(R.string.login);
             loggedIn = false;
+            toolbar.setTitle("Not Currently Logged In");
         }
     }
 

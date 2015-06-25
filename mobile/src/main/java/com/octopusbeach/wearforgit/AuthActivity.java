@@ -6,18 +6,20 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -34,7 +36,6 @@ public class AuthActivity extends ActionBarActivity {
     WebView webView;
     ProgressDialog progress;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +49,11 @@ public class AuthActivity extends ActionBarActivity {
         WebView webview = new WebView(this);
         WebSettings ws = webview.getSettings();
         ws.setSaveFormData(false);
-        progress = ProgressDialog.show(this, "", getString(R.string.loading), true);
+        progress = new ProgressDialog(this);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (progress != null)
-                    progress.dismiss();
+                progress.dismiss();
             }
 
             @Override
@@ -80,6 +80,7 @@ public class AuthActivity extends ActionBarActivity {
                 }
             }
         });
+        progress.show();
         webView.loadUrl(AuthHelper.getAuthorizationUrl());
     }
 
@@ -101,6 +102,12 @@ public class AuthActivity extends ActionBarActivity {
     private class PostRequestTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(AuthActivity.this);
+            progress.show();
+        }
+
+        @Override
         protected Boolean doInBackground(String... urls) {
             if (urls.length > 0) {
                 String s = urls[0];
@@ -109,11 +116,29 @@ public class AuthActivity extends ActionBarActivity {
                     URLConnection connection = url.openConnection();
                     String response = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
                     String accessToken = response.split("=")[1].split("&")[0];
+
+                    URL nameUrl = new URL(AuthHelper.USER_URL + accessToken);
+                    URLConnection nameConnection = nameUrl.openConnection();
+                    BufferedReader nameReader = new BufferedReader(new InputStreamReader(nameConnection.getInputStream()));
+                    StringBuilder nameJsonString = new StringBuilder();
+                    String line = nameReader.readLine();
+                    while (line != null) {
+                        nameJsonString.append(line);
+                        line = nameReader.readLine();
+                    }
+                    JSONObject nameObj = new JSONObject(nameJsonString.toString());
+                    String name = nameObj.getString("login");
+
                     // Save access token.
                     SharedPreferences preferences = AuthActivity.this.getSharedPreferences("token", MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(AuthHelper.TOKEN_KEY, accessToken);
                     editor.apply();
+
+                    // Save the name.
+                    SharedPreferences.Editor defaultEditor = PreferenceManager.getDefaultSharedPreferences(AuthActivity.this).edit();
+                    defaultEditor.putString(AuthHelper.USER_NAME_KEY, name);
+                    defaultEditor.apply();
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -124,6 +149,7 @@ public class AuthActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Boolean status) {
+            progress.dismiss();
             if (status) {
                 Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                 startActivity(intent);

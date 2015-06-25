@@ -20,6 +20,9 @@ public class AuthHelper {
     public static final String STATE_PARAM = "state";
 
     public static final String TOKEN_KEY = "accessToken";
+    public static final String USER_NAME_KEY = "userName";
+
+    public static final String USER_URL = "https://api.github.com/user?access_token=";
 
     // https://stackoverflow.com/questions/22062145/oauth-2-0-authorization-for-linkedin-in-android
     public static String getAuthorizationUrl() {

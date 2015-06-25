@@ -3,6 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    
+    <android.support.v7.widget.Toolbar
+        android:padding="10sp"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="@color/button_material_dark"
+        android:gravity="bottom" />
 
     <Button android:id="@+id/login_button"
         android:layout_width="wrap_content"
