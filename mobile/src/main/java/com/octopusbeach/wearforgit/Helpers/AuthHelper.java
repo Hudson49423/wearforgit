@@ -8,6 +8,7 @@ public class AuthHelper {
     private static final String CLIENT_ID = "3a9274e027b36dabe965";
     private static final String CLIENT_SECRET = "410df2cfdbcd904db95d0cb7139b95110bf86fc2";
     public static final String STATE = "~.ADyVa0i26lKX";
+    private static final String NOTIFICATIONS = "notifications";
 
     public static final String AUTH_URL = "https://github.com/login/oauth/authorize";
     public static final String TOKEN_URL = "https://github.com/login/oauth/access_token";
@@ -29,7 +30,9 @@ public class AuthHelper {
         return AUTH_URL
                 + QUESTION_MARK + "client_id" + EQUALS + CLIENT_ID
                 + AMPERSAND + "state" + EQUALS + STATE
-                + AMPERSAND + "redirect_uri" + EQUALS + REDIRECT;
+                + AMPERSAND + "redirect_uri" + EQUALS + REDIRECT
+                + AMPERSAND
+                + "scope" + EQUALS + NOTIFICATIONS;
     }
 
     public static String getAccessTokenUrl(String authorizationToken) {

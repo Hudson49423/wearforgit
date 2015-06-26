@@ -12,6 +12,8 @@ import android.widget.Button;
 
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
 import com.octopusbeach.wearforgit.R;
+import com.octopusbeach.wearforgit.services.BroadcastReceiver;
+import com.octopusbeach.wearforgit.services.NotificationService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -45,6 +47,9 @@ public class MainActivity extends ActionBarActivity {
         } else {
             loggedIn = false;
         }
+
+        //TODO remove this.
+        startService(new Intent(this, NotificationService.class));
     }
 
     @Override
@@ -88,6 +93,8 @@ public class MainActivity extends ActionBarActivity {
             loginButton.setText(R.string.login);
             loggedIn = false;
             toolbar.setTitle("Not Currently Logged In");
+            // Stop the current service and alarm manager.
+            new BroadcastReceiver().cancelAlarm(this);
         }
     }
 

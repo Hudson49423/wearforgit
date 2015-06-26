@@ -20,6 +20,7 @@
             android:name=".activities.AuthActivity"
             android:label="@string/auth_activity" />
         <service android:name=".services.NotificationService"/>
+        <receiver android:name=".services.BroadcastReceiver"/>
     </application>
 
 </manifest>

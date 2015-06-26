@@ -19,6 +19,7 @@ import android.webkit.WebViewClient;
 
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
 import com.octopusbeach.wearforgit.R;
+import com.octopusbeach.wearforgit.services.BroadcastReceiver;
 
 import org.json.JSONObject;
 
@@ -156,6 +157,7 @@ public class AuthActivity extends ActionBarActivity {
                 startActivity(intent);
                 AuthActivity.this.finish();
                 Log.d("Auth", "Finished Successful");
+                new BroadcastReceiver().setAlarm(AuthActivity.this);
             }
         }
     }
