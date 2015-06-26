@@ -1,10 +1,15 @@
 package com.octopusbeach.wearforgit.services;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+import com.octopusbeach.wearforgit.R;
+import com.octopusbeach.wearforgit.activities.MainActivity;
 
 import org.json.JSONArray;
 
@@ -27,6 +32,7 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d(TAG, "Pulling notifications");
         String token = getSharedPreferences("token", MODE_PRIVATE).getString(AuthHelper.TOKEN_KEY, null);
         if (token == null) {// We do not have an access token.
             Log.e(TAG, "Token was null");
@@ -45,12 +51,28 @@ public class NotificationService extends IntentService {
                 line = reader.readLine();
             }
             JSONArray array = new JSONArray(jsonBuilder.toString());
+            publishResults(array);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        publishResults();
     }
 
-    private void publishResults() {
+    private void publishResults(JSONArray array) {
+        Log.d(TAG, "Publishing results");
+        // TODO remove this.
+        if (array.length() == 0) { // there are no notifications. We should not make a notification for this.
+            int notification = 001;
+            Intent viewIntent = new Intent(getApplicationContext(), MainActivity.class);
+            PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, viewIntent, 0);
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(getApplicationContext())
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentText("No notifications")
+                            .setContentTitle("Wear For Git")
+                            .setContentIntent(pi);
+
+            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+            manager.notify(notification, builder.build());
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hudson on 6/25/15.
@@ -31,8 +32,8 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
         // Repeat every 5 minutes.
         Calendar c = Calendar.getInstance();
         int interval = PreferenceManager.getDefaultSharedPreferences(context).getInt("interval", 5);
-        c.add(Calendar.MINUTE, interval);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), c.getTimeInMillis(), pendingIntent);
+        c.add(Calendar.MINUTE, 1);
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TimeUnit.MINUTES.toMillis(interval), pendingIntent);
     }
 
     public void cancelAlarm(Context context) {
