@@ -12,6 +12,7 @@ import com.octopusbeach.wearforgit.R;
 import com.octopusbeach.wearforgit.activities.MainActivity;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -59,20 +60,28 @@ public class NotificationService extends IntentService {
 
     private void publishResults(JSONArray array) {
         Log.d(TAG, "Publishing results");
-        // TODO remove this.
-        if (array.length() == 0) { // there are no notifications. We should not make a notification for this.
-            int notification = 001;
-            Intent viewIntent = new Intent(getApplicationContext(), MainActivity.class);
-            PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, viewIntent, 0);
-            NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentText("No notifications")
-                            .setContentTitle("Wear For Git")
-                            .setContentIntent(pi);
+        int notification = 001;
+        if (array != null) {
+            try {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject not = array.getJSONObject(i);
+                    JSONObject subject = not.getJSONObject("subject");
 
-            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-            manager.notify(notification, builder.build());
+                    Intent viewIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, viewIntent, 0);
+                    NotificationCompat.Builder builder =
+                            new NotificationCompat.Builder(getApplicationContext())
+                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                    .setContentText(subject.getString("title"))
+                                    .setContentTitle("New " + subject.getString("type"))
+                                    .setContentIntent(pi);
+
+                    NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+                    manager.notify(notification, builder.build());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
