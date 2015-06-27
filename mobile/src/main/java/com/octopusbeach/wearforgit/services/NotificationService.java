@@ -1,6 +1,7 @@
 package com.octopusbeach.wearforgit.services;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
@@ -25,6 +26,8 @@ import java.net.URLConnection;
 public class NotificationService extends IntentService {
     private static final String TAG = NotificationService.class.getSimpleName();
     private static final String URL = "https://api.github.com/notifications?access_token=";
+
+    private static final String GROUP = "notifications";
 
 
     public NotificationService() {
@@ -60,11 +63,12 @@ public class NotificationService extends IntentService {
 
     private void publishResults(JSONArray array) {
         Log.d(TAG, "Publishing results");
-        int notification = 001;
+        int notification = 1;
         if (array != null) {
-            try {
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject not = array.getJSONObject(i);
+            int length = array.length();
+            if (length == 1) {
+                try {
+                    JSONObject not = array.getJSONObject(0);
                     JSONObject subject = not.getJSONObject("subject");
 
                     Intent viewIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -74,13 +78,47 @@ public class NotificationService extends IntentService {
                                     .setSmallIcon(R.mipmap.ic_launcher)
                                     .setContentText(subject.getString("title"))
                                     .setContentTitle("New " + subject.getString("type"))
-                                    .setContentIntent(pi);
-
+                                    .setContentIntent(pi)
+                                    .setDefaults(Notification.DEFAULT_ALL);
                     NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-                    manager.notify(notification, builder.build());
+                    manager.notify(notification + 1, builder.build());
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else if (length > 1) { // Multiple notifications
+                NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+                //Create the individual notifications.
+                Intent viewIntent = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, viewIntent, 0);
+                for (int i = 0; i < array.length(); i++) {
+                    try {
+                        JSONObject not = array.getJSONObject(i);
+                        JSONObject subject = not.getJSONObject("subject");
+                        NotificationCompat.Builder builder =
+                                new NotificationCompat.Builder(getApplicationContext())
+                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setContentText(subject.getString("title"))
+                                        .setContentTitle("New " + subject.getString("type"))
+                                        .setContentIntent(pi)
+                                        .setGroup(GROUP)
+                                        .setGroupSummary(false);
+                        manager.notify(notification, builder.build());
+                        notification++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // Create the summary notification.
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentText("" + length + " new")
+                        .setContentTitle("New GitHub notifications")
+                        .setGroup(GROUP)
+                        .setGroupSummary(true)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setContentIntent(pi);
+                manager.notify(notification, builder.build());
             }
         }
     }
