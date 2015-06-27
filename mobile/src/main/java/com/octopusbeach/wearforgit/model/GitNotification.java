@@ -8,11 +8,13 @@ public class GitNotification {
     private String title;
     private String type;
     private String comment;
+    private String repo;
 
-    public GitNotification(String title, String type, String comment) {
+    public GitNotification(String title, String type, String comment, String repo) {
         this.title = title;
         this.type = type;
         this.comment = comment;
+        this.repo = repo;
     }
 
     public String getTitle() {
@@ -37,5 +39,13 @@ public class GitNotification {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getRepo() {
+        return repo;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
     }
 }
