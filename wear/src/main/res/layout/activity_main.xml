@@ -14,11 +14,19 @@
         app:layout_box="all">
 
         <at.markushi.ui.CircleButton
-            android:layout_width="78dip"
-            android:layout_height="78dip"
+            android:layout_width="156dip"
+            android:layout_height="156dip"
             android:layout_gravity="center"
+            android:src="@drawable/ic_action_refresh"
             app:cb_color="#99CC00"
-            app:cb_pressedRingWidth="8dip" />
+            app:cb_pressedRingWidth="16dip" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:text="@string/check_for_notifications" />
     </FrameLayout>
 
 </android.support.wearable.view.BoxInsetLayout>
