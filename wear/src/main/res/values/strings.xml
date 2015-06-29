@@ -3,4 +3,5 @@
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
     <string name="check_for_notifications">Check for Notifications</string>
+    <string name="not_logged_in">Not logged In</string>
 </resources>

@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.Wearable;
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
 import com.octopusbeach.wearforgit.R;
 import com.octopusbeach.wearforgit.services.BroadcastReceiver;
@@ -29,12 +32,20 @@ public class MainActivity extends ActionBarActivity {
 
     private boolean loggedIn;
 
+    private static final String LOGIN_PATH = "/login";
+    private static final String LOGIN_KEY = "loggedIn";
+    private GoogleApiClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra("loginSuccessful", false))
+            alertWatchOfLogin(true);
 
         setSupportActionBar(toolbar);
 
@@ -95,7 +106,33 @@ public class MainActivity extends ActionBarActivity {
             toolbar.setTitle("Not Currently Logged In");
             // Stop the current service and alarm manager.
             new BroadcastReceiver().cancelAlarm(this);
+            alertWatchOfLogin(false);
         }
+    }
+
+    private void alertWatchOfLogin(final boolean logggedIn) {
+        client = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        sendData(logggedIn);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                }).build();
+        client.connect();
+    }
+
+    private void sendData(boolean loggedIn) {
+        // Now we want to actually send the data to the watch.
+        PutDataMapRequest dataMapRequest = PutDataMapRequest.create(LOGIN_PATH);
+        dataMapRequest.getDataMap().putBoolean(LOGIN_KEY, loggedIn);
+        Wearable.DataApi.putDataItem(client, dataMapRequest.asPutDataRequest());
+        client.disconnect();
     }
 
 }

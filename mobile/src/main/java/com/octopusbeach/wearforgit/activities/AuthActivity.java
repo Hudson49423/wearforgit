@@ -154,6 +154,7 @@ public class AuthActivity extends ActionBarActivity {
             progress.dismiss();
             if (status) {
                 Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+                intent.putExtra("loginSuccessful", true);
                 startActivity(intent);
                 AuthActivity.this.finish();
                 Log.d("Auth", "Finished Successful");
