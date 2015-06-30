@@ -2,10 +2,12 @@ package com.octopusbeach.wearforgit.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.octopusbeach.wearforgit.Helpers.AuthHelper;
 import com.octopusbeach.wearforgit.model.GitNotification;
@@ -15,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class NotificationService extends IntentService {
     public static final String NOTIFICATION_CONTENT = "content";
 
     private GoogleApiClient client;
+    private Uri uri = new Uri.Builder().scheme(PutDataRequest.WEAR_URI_SCHEME).path(NOTIFICATION_PATH).build();
 
     public NotificationService() {
         super("NotificationService");
@@ -102,6 +106,9 @@ public class NotificationService extends IntentService {
 
     private void publishResults(ArrayList<GitNotification> notifications) {
         Log.d(TAG, "Publishing results");
+        // Delete old data items.
+        Wearable.DataApi.deleteDataItems(client, uri);
+
         for (GitNotification not : notifications) {
             if (client.isConnected()) {
                 PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NOTIFICATION_PATH);

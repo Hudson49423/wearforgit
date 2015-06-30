@@ -7,13 +7,15 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.android.gms.nearby.connection.Connections;
+
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hudson on 6/25/15.
  */
-public class BroadcastReceiver extends android.content.BroadcastReceiver {
+public class BroadcastReceiver extends android.content.BroadcastReceiver{
 
     private static final String TAG = BroadcastReceiver.class.getSimpleName();
 
