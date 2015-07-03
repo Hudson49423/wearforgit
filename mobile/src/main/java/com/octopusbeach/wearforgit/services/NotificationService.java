@@ -28,15 +28,12 @@ import java.util.ArrayList;
 public class NotificationService extends IntentService {
     private static final String TAG = NotificationService.class.getSimpleName();
     private static final String URL = "https://api.github.com/notifications?access_token=";
-    private static final String GROUP = "notifications";
 
     public static final String NOTIFICATION_PATH = "/notification";
-    public static final String NOTIFICATION_TIMESTAMP = "timestamp";
     public static final String NOTIFICATION_TITLE = "title";
     public static final String NOTIFICATION_CONTENT = "content";
 
     private GoogleApiClient client;
-    private Uri uri = new Uri.Builder().scheme(PutDataRequest.WEAR_URI_SCHEME).path(NOTIFICATION_PATH).build();
 
     public NotificationService() {
         super("NotificationService");
@@ -105,14 +102,11 @@ public class NotificationService extends IntentService {
     }
 
     private void publishResults(ArrayList<GitNotification> notifications) {
-        Log.d(TAG, "Publishing results");
         // Delete old data items.
-        Wearable.DataApi.deleteDataItems(client, uri);
 
         for (GitNotification not : notifications) {
             if (client.isConnected()) {
                 PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NOTIFICATION_PATH);
-                dataMapRequest.getDataMap().putLong(NOTIFICATION_TIMESTAMP, System.currentTimeMillis());
                 dataMapRequest.getDataMap().putString(NOTIFICATION_TITLE, not.getTitle());
                 dataMapRequest.getDataMap().putString(NOTIFICATION_CONTENT, not.getComment());
                 Wearable.DataApi.putDataItem(client, dataMapRequest.asPutDataRequest());

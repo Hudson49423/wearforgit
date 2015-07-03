@@ -28,6 +28,7 @@ public class NotificationListener extends WearableListenerService {
     public static final String NOTIFICATION_CONTENT = "content";
     private static final String LOGIN_PATH = "/login";
     private static final String LOGIN_KEY = "loggedIn";
+    private static final String GROUP = "notifications";
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
@@ -52,23 +53,12 @@ public class NotificationListener extends WearableListenerService {
     }
 
     private void sendNotification(String title, String content) {
-        // Create the second page which will bring us to an activity.
-        Intent viewIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingViewIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
-        Notification secondPage = new NotificationCompat.Builder(this)
-                .extend(new NotificationCompat.WearableExtender()
-                        .setDisplayIntent(pendingViewIntent)
-                        .setCustomSizePreset(Notification.WearableExtender.SIZE_FULL_SCREEN))
-                .build();
-
-
         Notification note = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .extend(new NotificationCompat.WearableExtender()
-                        .addPage(secondPage))
+                .setGroup(GROUP)
                 .build();
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
