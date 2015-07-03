@@ -57,13 +57,29 @@ public class NotificationListener extends WearableListenerService {
         }
     }
 
-    private void sendNotification(String title, String content, String repo, String user, String type) {
+    private void sendNotification(String title, String comment, String repo, String user, String type) {
+        // Create the notifications second page which gives the user more information about the notification.
+        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+        // Here we want to set the text that the user will see.
+        // This takes the form,
+        // From User: Hudson49423
+        // com.espressolog.espressolog
+        // (If there is a comment) comment
+        bigStyle.bigText(comment);
+        Notification secondPage = new NotificationCompat.Builder(this)
+                .setContentTitle(user)
+                .setContentText(repo)
+                .setStyle(bigStyle)
+                .build();
+
         Notification note = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(content)
+                .setContentTitle(type)
+                .setContentText(title)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setGroup(GROUP)
+                .extend(new NotificationCompat.WearableExtender()
+                        .addPage(secondPage))
                 .build();
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
