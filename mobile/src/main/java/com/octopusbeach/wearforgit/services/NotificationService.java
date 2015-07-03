@@ -30,8 +30,11 @@ public class NotificationService extends IntentService {
     private static final String URL = "https://api.github.com/notifications?access_token=";
 
     public static final String NOTIFICATION_PATH = "/notification";
-    public static final String NOTIFICATION_TITLE = "title";
-    public static final String NOTIFICATION_CONTENT = "content";
+    public static final String TITLE = "title";
+    public static final String COMMENT = "content";
+    public static final String TYPE = "type";
+    public static final String USER = "user";
+    public static final String REPO = "repo";
 
     private GoogleApiClient client;
 
@@ -86,9 +89,8 @@ public class NotificationService extends IntentService {
                     JSONObject comment = new JSONObject(commentBuilder.toString());
                     JSONObject user = new JSONObject(comment.getString("user"));
                     JSONObject repo = not.getJSONObject("repository");
-
                     GitNotification note = new GitNotification(subject.getString("title"),
-                            subject.getString("type"), user.getString("login") + ": " + comment.getString("body"), repo.getString("name"));
+                            subject.getString("type"), user.getString("login") + ": " + comment.getString("body"), repo.getString("name"), user.getString("login"));
                     notifications.add(note);
 
                 } catch (Exception e) {
@@ -102,13 +104,14 @@ public class NotificationService extends IntentService {
     }
 
     private void publishResults(ArrayList<GitNotification> notifications) {
-        // Delete old data items.
-
         for (GitNotification not : notifications) {
             if (client.isConnected()) {
                 PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NOTIFICATION_PATH);
-                dataMapRequest.getDataMap().putString(NOTIFICATION_TITLE, not.getTitle());
-                dataMapRequest.getDataMap().putString(NOTIFICATION_CONTENT, not.getComment());
+                dataMapRequest.getDataMap().putString(TITLE, not.getTitle());
+                dataMapRequest.getDataMap().putString(COMMENT, not.getComment());
+                dataMapRequest.getDataMap().putString(TYPE, not.getType());
+                dataMapRequest.getDataMap().putString(USER, not.getUser());
+                dataMapRequest.getDataMap().putString(REPO, not.getRepo());
                 Wearable.DataApi.putDataItem(client, dataMapRequest.asPutDataRequest());
             } else {
                 Log.e(TAG, "Wearable is not connected");

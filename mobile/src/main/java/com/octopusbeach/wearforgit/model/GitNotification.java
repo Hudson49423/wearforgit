@@ -9,43 +9,34 @@ public class GitNotification {
     private String type;
     private String comment;
     private String repo;
+    private String user;
 
-    public GitNotification(String title, String type, String comment, String repo) {
+    public GitNotification(String title, String type, String comment, String repo, String user) {
         this.title = title;
         this.type = type;
         this.comment = comment;
         this.repo = repo;
+        this.user = user;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public String getRepo() {
         return repo;
     }
 
-    public void setRepo(String repo) {
-        this.repo = repo;
+    public String getUser() {
+        return user;
     }
+
 }

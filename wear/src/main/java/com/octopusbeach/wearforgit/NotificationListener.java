@@ -24,24 +24,29 @@ public class NotificationListener extends WearableListenerService {
     private static final String TAG = NotificationListener.class.getSimpleName();
 
     public static final String NOTIFICATION_PATH = "/notification";
-    public static final String NOTIFICATION_TITLE = "title";
-    public static final String NOTIFICATION_CONTENT = "content";
+    public static final String TITLE = "title";
+    public static final String COMMENT = "content";
+    public static final String TYPE = "type";
+    public static final String USER = "user";
+    public static final String REPO = "repo";
     private static final String LOGIN_PATH = "/login";
     private static final String LOGIN_KEY = "loggedIn";
     private static final String GROUP = "notifications";
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
-        Log.d(TAG, "Data changed");
         for (DataEvent dataEvent : dataEvents) {
             if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(dataEvent.getDataItem());
                 String uriPath = dataMapItem.getUri().getPath();
                 DataMap map = dataMapItem.getDataMap();
                 if (NOTIFICATION_PATH.equals(uriPath)) {
-                    String title = map.getString(NOTIFICATION_TITLE);
-                    String content = map.getString(NOTIFICATION_CONTENT);
-                    sendNotification(title, content);
+                    String title = map.getString(TITLE);
+                    String comment = map.getString(COMMENT);
+                    String repo = map.getString(REPO);
+                    String user = map.getString(USER);
+                    String type = map.getString(TYPE);
+                    sendNotification(title, comment, repo, user, type);
                 } else if (LOGIN_PATH.equals(uriPath)) {
                     boolean loggedIn = map.getBoolean(LOGIN_KEY, false);
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -52,7 +57,7 @@ public class NotificationListener extends WearableListenerService {
         }
     }
 
-    private void sendNotification(String title, String content) {
+    private void sendNotification(String title, String content, String repo, String user, String type) {
         Notification note = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
