@@ -7,4 +7,6 @@
     <string name="login">Login</string>
     <string name="logout">Log Out</string>
     <string name="auth_activity">Authorization</string>
+    <string name="avatar">avatar</string>
+    <string name="background">background</string>
 </resources>

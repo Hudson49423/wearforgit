@@ -1,8 +1,11 @@
 package com.octopusbeach.wearforgit.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +27,7 @@ import com.octopusbeach.wearforgit.services.BroadcastReceiver;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -117,8 +121,14 @@ public class AuthActivity extends ActionBarActivity {
                     URL url = new URL(s);
                     URLConnection connection = url.openConnection();
                     String response = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
-                    String accessToken = response.split("=")[1].split("&")[0];
+                    String accessToken = response.split("=")[1].split("&")[0]; // Get the auth token.
+                    // Save access token.
+                    SharedPreferences preferences = AuthActivity.this.getSharedPreferences("token", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(AuthHelper.TOKEN_KEY, accessToken);
+                    editor.apply();
 
+                    // Get the user's name as a string.
                     URL nameUrl = new URL(AuthHelper.USER_URL + accessToken);
                     URLConnection nameConnection = nameUrl.openConnection();
                     BufferedReader nameReader = new BufferedReader(new InputStreamReader(nameConnection.getInputStream()));
@@ -130,17 +140,18 @@ public class AuthActivity extends ActionBarActivity {
                     }
                     JSONObject nameObj = new JSONObject(nameJsonString.toString());
                     String name = nameObj.getString("login");
-
-                    // Save access token.
-                    SharedPreferences preferences = AuthActivity.this.getSharedPreferences("token", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(AuthHelper.TOKEN_KEY, accessToken);
-                    editor.apply();
-
                     // Save the name.
                     SharedPreferences.Editor defaultEditor = PreferenceManager.getDefaultSharedPreferences(AuthActivity.this).edit();
                     defaultEditor.putString(AuthHelper.USER_NAME_KEY, name);
                     defaultEditor.apply();
+
+                    // Get the user's photo.
+                    URL avatarURL = new URL(nameObj.getString("avatar_url"));
+                    Bitmap img = BitmapFactory.decodeStream(avatarURL.openStream());
+                    FileOutputStream fos = AuthActivity.this.openFileOutput(AuthHelper.AVATAR_FILE_NAME, Context.MODE_PRIVATE);
+                    img.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();

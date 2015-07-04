@@ -1,22 +1,40 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    
-    <android.support.v7.widget.Toolbar
-        android:padding="10sp"
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:minHeight="?android:attr/actionBarSize"
-        android:background="@color/button_material_dark"
-        android:gravity="bottom" />
 
-    <Button android:id="@+id/login_button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:layout_centerInParent="true"/>
+        android:layout_gravity="center">
 
-</RelativeLayout>
+        <ImageView
+            android:padding="10dp"
+            android:id="@+id/avatar"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:contentDescription="@string/avatar" />
+
+        <TextView android:id="@+id/user_text"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/login_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="125dp"
+        android:text="@string/login"
+        android:textSize="26sp"
+        android:textStyle="italic" />
+
+</FrameLayout>

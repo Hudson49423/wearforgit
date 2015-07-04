@@ -25,6 +25,8 @@ public class AuthHelper {
 
     public static final String USER_URL = "https://api.github.com/user?access_token=";
 
+    public static final String AVATAR_FILE_NAME = "avatar.png";
+
     // https://stackoverflow.com/questions/22062145/oauth-2-0-authorization-for-linkedin-in-android
     public static String getAuthorizationUrl() {
         return AUTH_URL
