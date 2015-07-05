@@ -4,6 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="loading">Loading</string>
+    <string name="auth">Authenticating Account</string>
     <string name="login">Login</string>
     <string name="logout">Log Out</string>
     <string name="auth_activity">Authorization</string>

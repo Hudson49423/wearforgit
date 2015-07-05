@@ -78,6 +78,11 @@ public class MainActivity extends ActionBarActivity {
             // Stop the current service and alarm manager.
             new BroadcastReceiver().cancelAlarm(this);
             alertWatchOfLogin(false);
+            // Delete the name
+            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            edit.putString(AuthHelper.USER_NAME_KEY, "");
+            edit.apply();
+            userText.setText("");
             //Now try to delete the avatar image.
             try {
                 File img = this.getFileStreamPath(AuthHelper.AVATAR_FILE_NAME);

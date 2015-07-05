@@ -40,7 +40,6 @@ public class AuthActivity extends ActionBarActivity {
 
     @InjectView(R.id.webView)
     WebView webView;
-    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class AuthActivity extends ActionBarActivity {
         WebView webview = new WebView(this);
         WebSettings ws = webview.getSettings();
         ws.setSaveFormData(false);
-        progress = new ProgressDialog(this);
+        final ProgressDialog progress = new ProgressDialog(this);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -87,6 +86,7 @@ public class AuthActivity extends ActionBarActivity {
             }
         });
         progress.show();
+        progress.setMessage(getString(R.string.loading));
         webView.loadUrl(AuthHelper.getAuthorizationUrl());
     }
 
@@ -107,9 +107,12 @@ public class AuthActivity extends ActionBarActivity {
 
     private class PostRequestTask extends AsyncTask<String, Void, Boolean> {
 
+        ProgressDialog progress;
+
         @Override
         protected void onPreExecute() {
             progress = new ProgressDialog(AuthActivity.this);
+            progress.setMessage(getString(R.string.auth));
             progress.show();
         }
 
