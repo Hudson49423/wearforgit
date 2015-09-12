@@ -19,8 +19,9 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
-import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+import com.octopusbeach.wearforgit.helpers.AuthHelper;
 import com.octopusbeach.wearforgit.R;
 import com.octopusbeach.wearforgit.services.BroadcastReceiver;
 
@@ -173,7 +174,9 @@ public class AuthActivity extends ActionBarActivity {
                 AuthActivity.this.finish();
                 Log.d("Auth", "Finished Successful");
                 new BroadcastReceiver().setAlarm(AuthActivity.this);
+                Toast.makeText(AuthActivity.this, R.string.login_success, Toast.LENGTH_LONG);
             }
+            Toast.makeText(AuthActivity.this, R.string.login_unsuccess, Toast.LENGTH_LONG);
         }
     }
 }

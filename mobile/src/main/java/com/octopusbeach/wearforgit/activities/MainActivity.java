@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+import com.octopusbeach.wearforgit.helpers.AuthHelper;
 import com.octopusbeach.wearforgit.R;
 import com.octopusbeach.wearforgit.services.BroadcastReceiver;
 

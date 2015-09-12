@@ -2,14 +2,12 @@ package com.octopusbeach.wearforgit.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.octopusbeach.wearforgit.Helpers.AuthHelper;
+import com.octopusbeach.wearforgit.helpers.AuthHelper;
 import com.octopusbeach.wearforgit.model.GitNotification;
 
 import org.json.JSONArray;
@@ -17,7 +15,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;

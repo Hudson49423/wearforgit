@@ -1,4 +1,4 @@
-package com.octopusbeach.wearforgit.Helpers;
+package com.octopusbeach.wearforgit.helpers;
 
 /**
  * Created by hudson on 6/23/15.
