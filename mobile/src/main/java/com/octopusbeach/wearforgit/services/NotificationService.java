@@ -114,6 +114,5 @@ public class NotificationService extends IntentService {
                 Log.e(TAG, "Wearable is not connected");
             }
         }
-        client.disconnect();
     }
 }

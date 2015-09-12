@@ -21,8 +21,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.octopusbeach.wearforgit.helpers.AuthHelper;
 import com.octopusbeach.wearforgit.R;
+import com.octopusbeach.wearforgit.helpers.AuthHelper;
 import com.octopusbeach.wearforgit.services.BroadcastReceiver;
 
 import org.json.JSONObject;

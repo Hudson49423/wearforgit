@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.google.android.gms.nearby.connection.Connections;
-
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +21,12 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         // Start the notification service.
         Log.d(TAG, "Starting notification service");
+
+        if (intent.getAction() == Intent.ACTION_BOOT_COMPLETED) {
+            cancelAlarm(context);
+            setAlarm(context);
+        }
+
         context.startService(new Intent(context, NotificationService.class));
     }
 
