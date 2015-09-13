@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     }
 
     private void sendMessage() {
+        if (client == null) return;
         if (client.isConnected()) {
             new Thread(new Runnable() {
                 @Override
@@ -59,6 +60,7 @@ public class MainActivity extends Activity {
     }
 
     private void setUpClient() {
+        if (client == null) return;
         client = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .build();
@@ -68,6 +70,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        if (client == null) return;
         client.disconnect();
     }
 }
