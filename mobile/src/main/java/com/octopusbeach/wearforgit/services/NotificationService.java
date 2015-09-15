@@ -30,7 +30,6 @@ public class NotificationService extends IntentService {
     public static final String TITLE = "title";
     public static final String COMMENT = "content";
     public static final String TYPE = "type";
-    public static final String USER = "user";
     public static final String REPO = "repo";
 
     private GoogleApiClient client;
@@ -87,7 +86,7 @@ public class NotificationService extends IntentService {
                     JSONObject user = new JSONObject(comment.getString("user"));
                     JSONObject repo = not.getJSONObject("repository");
                     GitNotification note = new GitNotification(subject.getString("title"),
-                            subject.getString("type"), user.getString("login") + ": " + comment.getString("body"), repo.getString("name"), user.getString("login"));
+                            subject.getString("type"), user.getString("login") + ": " + comment.getString("body"), repo.getString("name"));
                     notifications.add(note);
 
                 } catch (Exception e) {
@@ -107,7 +106,6 @@ public class NotificationService extends IntentService {
                 dataMapRequest.getDataMap().putString(TITLE, not.getTitle());
                 dataMapRequest.getDataMap().putString(COMMENT, not.getComment());
                 dataMapRequest.getDataMap().putString(TYPE, not.getType());
-                dataMapRequest.getDataMap().putString(USER, not.getUser());
                 dataMapRequest.getDataMap().putString(REPO, not.getRepo());
                 Wearable.DataApi.putDataItem(client, dataMapRequest.asPutDataRequest());
             } else {

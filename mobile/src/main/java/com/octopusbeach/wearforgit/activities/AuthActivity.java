@@ -174,9 +174,9 @@ public class AuthActivity extends ActionBarActivity {
                 AuthActivity.this.finish();
                 Log.d("Auth", "Finished Successful");
                 new BroadcastReceiver().setAlarm(AuthActivity.this);
-                Toast.makeText(AuthActivity.this, R.string.login_success, Toast.LENGTH_LONG);
-            }
-            Toast.makeText(AuthActivity.this, R.string.login_unsuccess, Toast.LENGTH_LONG);
+                Toast.makeText(AuthActivity.this, R.string.login_success, Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(AuthActivity.this, R.string.login_unsuccess, Toast.LENGTH_LONG).show();
         }
     }
 }

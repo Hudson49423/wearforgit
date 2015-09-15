@@ -9,14 +9,12 @@ public class GitNotification {
     private String type;
     private String comment;
     private String repo;
-    private String user;
 
-    public GitNotification(String title, String type, String comment, String repo, String user) {
+    public GitNotification(String title, String type, String comment, String repo) {
         this.title = title;
         this.type = type;
         this.comment = comment;
         this.repo = repo;
-        this.user = user;
     }
 
     public String getTitle() {
@@ -33,10 +31,6 @@ public class GitNotification {
 
     public String getRepo() {
         return repo;
-    }
-
-    public String getUser() {
-        return user;
     }
 
 }

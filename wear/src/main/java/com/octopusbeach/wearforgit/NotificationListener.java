@@ -27,7 +27,6 @@ public class NotificationListener extends WearableListenerService {
     public static final String TITLE = "title";
     public static final String COMMENT = "content";
     public static final String TYPE = "type";
-    public static final String USER = "user";
     public static final String REPO = "repo";
     private static final String LOGIN_PATH = "/login";
     private static final String LOGIN_KEY = "loggedIn";
@@ -44,9 +43,8 @@ public class NotificationListener extends WearableListenerService {
                     String title = map.getString(TITLE);
                     String comment = map.getString(COMMENT);
                     String repo = map.getString(REPO);
-                    String user = map.getString(USER);
                     String type = map.getString(TYPE);
-                    sendNotification(title, comment, repo, user, type);
+                    sendNotification(title, comment, repo, type);
                 } else if (LOGIN_PATH.equals(uriPath)) {
                     boolean loggedIn = map.getBoolean(LOGIN_KEY, false);
                     SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -57,18 +55,13 @@ public class NotificationListener extends WearableListenerService {
         }
     }
 
-    private void sendNotification(String title, String comment, String repo, String user, String type) {
+    private void sendNotification(String title, String comment, String repo, String type) {
         // Create the notifications second page which gives the user more information about the notification.
         NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-        // Here we want to set the text that the user will see.
-        // This takes the form,
-        // From User: Hudson49423
-        // com.espressolog.espressolog
-        // (If there is a comment) comment
+
         bigStyle.bigText(comment);
         Notification secondPage = new NotificationCompat.Builder(this)
-                .setContentTitle(user)
-                .setContentText(repo)
+                .setContentTitle(repo)
                 .setStyle(bigStyle)
                 .build();
 
